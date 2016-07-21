@@ -1,7 +1,3 @@
-# Makefile
-# ECE358 Computer Networks
-# Yiqing Huang, 2016/06/17
-
 INCLUDE =
 CC = gcc
 CFLAGS = -I$(INCLUDE) -Wall -g  -D_BSD_SOURCE

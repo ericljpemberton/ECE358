@@ -1,6 +1,3 @@
-/** 
- * @brief ucp API interface header
- */
 #include <netinet/in.h>
 
 int ucpSocket();

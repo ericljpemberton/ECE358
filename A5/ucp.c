@@ -1,8 +1,3 @@
-/* 
- * Mahesh V. Tripunitara
- * University of Waterloo
- *
- */
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>

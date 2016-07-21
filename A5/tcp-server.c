@@ -1,5 +1,4 @@
-/* Mahesh V. Tripunitara
- * University of Waterloo
+/*
  * tcp-server.c -- first prints out the IP & port on which in runs.
  * Then awaits connections from clients. Create a pthread for each
  * connection. The thread just reads what the other end sends and
