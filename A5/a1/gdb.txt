@@ -1,0 +1,3 @@
+set follow-fork-mode child
+break peer.h:Peer.executeCommand
+break peer.h:Peer.changeNeighbourCommand

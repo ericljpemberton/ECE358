@@ -1,0 +1,7 @@
+*.o
+*.exe
+addcontent
+addpeer
+lookupcontent
+removecontent
+removepeer
