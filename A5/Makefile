@@ -1,7 +1,7 @@
 INCLUDE =
-CC = gcc
+CC = g++
 CFLAGS = -I$(INCLUDE) -Wall -g  -D_BSD_SOURCE
-LD = gcc
+LD = g++
 LDFLAGS = -lpthread
 LDLIBS = 
 

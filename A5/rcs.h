@@ -1,7 +1,3 @@
-/**
- * @brief: ECE358 RCS API interface header
- *
- */
 #ifndef RCS_H_
 #define RCS_H_
 
