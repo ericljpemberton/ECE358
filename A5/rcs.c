@@ -1,5 +1,5 @@
 #include "rcs.h"
-#include "manager.cc";
+#include "manager.cc"
 
 //used to allocate an RCS socket
 //Returns a socket descriptor (positive integer) on success
@@ -19,7 +19,9 @@ int rcsSocket()
 int rcsBind(int index, struct sockaddr_in *addr) 
 {
     manager.changeRcsConnectionState(index, BOUND);
-    addr->sin_port = manager.getSockAddrIn().sin_port;
+    //TODO: how the fuck do we determine the port?
+    //addr->sin_port = 
+    manager.registerRcsUcpTarget(index, addr);
     return 0;
 }
 
@@ -49,9 +51,10 @@ int rcsAccept(int index, struct sockaddr_in *addr)
 
     while (manager.getRcsConnectionState(index) == ACCEPTING) {
         //TODO: do handshake
+        //TODO: should set registered.UcpRcsPairing to be index of far side
     }
     if (manager.getRcsConnectionState(index) != CONNECTED) return -1; //handshake did not succeed
-    return manager.getRcsConnectionPairing(index); // the index on the far side
+    return index;
 }
 
 //connects a client to a server
@@ -78,9 +81,13 @@ int rcsConnect(int index, const struct sockaddr_in *addr)
 //Data is sent and received reliably, so any byte that is returned by this call should be what was sent, and in the correct order
 int rcsRecv(int index, void *buf, int len)
 {
-    //return (int) recv(index, buf, len, 0);
-    // ^ illegal
-    return 0;
+    manager.changeRcsConnectionState(index, RECEIVING);
+    int bytes = manager.checkMessageQueue(index, buf, len);
+    while (bytes < 0) {
+        bytes = manager.checkMessageQueue(index, buf, len);
+    }
+
+    return bytes;
 }
 
 //blocks sending data
@@ -99,7 +106,7 @@ int rcsSend(int index, void *buf, int len)
 //Returns 0 on success.
 int rcsClose(int index)
 {
-    //return close(sockfd); 
-    // ^ illegal
+    //TODO: do handshake
+    manager.changeRcsConnectionState(index, CLOSED);
     return 0;
 }
