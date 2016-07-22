@@ -97,6 +97,7 @@ int rcsRecv(int index, void *buf, int len)
 //If rcsSend() returns with a non-negative return value, then we know that so many bytes were reliably received by the other end
 int rcsSend(int index, void *buf, int len)
 {
+    //TODO TODO
     //return (int) send(index, buf, len, 0);
     // ^ illegal
     return 0;

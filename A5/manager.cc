@@ -82,6 +82,7 @@ public:
         ucpSetSockRecvTimeout(sockfd, milliSecs);
 
         //TODO: fork a thread to constantly consume messages
+        //TODO: figure out how to terminate this... since the process needs to die when the client is done
         /*
         while (true) {
             receiveMessages();
