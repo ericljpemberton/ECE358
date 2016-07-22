@@ -1,0 +1,6 @@
+*.d
+*.o
+rcsapp-server
+rcsapp-client
+tcp-client
+tcp-server

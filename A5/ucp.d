@@ -1,1 +1,0 @@
-ucp.o: ucp.c
