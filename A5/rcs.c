@@ -12,13 +12,19 @@
 static Manager manager;
 
 int checksum(char *buf) {
-    //TODO
-    return 0;
+    int i = 0;
+    int checksumVal = 0;
+    while (buf[i] != '\0') {
+        checksumVal += buf[i];
+        i++;
+    }
+    std::cout << "Checksum val: " << checksumVal << std::endl;
+    return checksumVal;
 }
 
 //used to allocate an RCS socket. No arguments.
 //Returns a socket descriptor (positive integer) on success
-int rcsSocket() 
+int rcsSocket()
 {
     std::cout << "Making a socket" << std::endl;
     int sockfd = ucpSocket();
@@ -28,12 +34,12 @@ int rcsSocket()
 //binds an RCS socket (first argument) to the address structure (second argument)
 //If the port component of the second parameter is specified as 0, the call should choose a port and fill that into the port portion of the second argument
 //Returns 0 on success
-int rcsBind(int index, struct sockaddr_in *addr) 
+int rcsBind(int index, struct sockaddr_in *addr)
 {
     std::cout << "Binding a socket" << std::endl;
     // manager.changeRcsConnectionState(index, BOUND);
     //TODO: how the fuck do we determine the port?
-    //addr->sin_port = 
+    //addr->sin_port =
     // manager.registerRcsUcpTarget(index, addr);
     manager.sockets.at(index).addr = addr;
     return ucpBind(manager.sockets.at(index).sockfd, addr);
@@ -41,7 +47,7 @@ int rcsBind(int index, struct sockaddr_in *addr)
 
 //fills in the address information into the second argument with which an RCS socket (first argument) has been bound via a call to rcsBind()
 //Returns 0 on success
-int rcsGetSockName(int index, struct sockaddr_in *addr) 
+int rcsGetSockName(int index, struct sockaddr_in *addr)
 {
     std::cout << "Getting socket name" << std::endl;
     addr->sin_addr.s_addr = manager.sockets.at(index).addr->sin_addr.s_addr;
@@ -54,7 +60,7 @@ int rcsListen(int index)
 {
     std::cout << "Listening..." << std::endl;
     manager.sockets.at(index).receiving = 1;
-    return 0; 
+    return 0;
 }
 
 //accepts a connection request on a socket (the first argument)
@@ -68,7 +74,7 @@ int rcsAccept(int index, struct sockaddr_in *addr)
     if (manager.sockets.at(index).receiving < 1) {
         return -1;
     }
-    
+
     char buf[8];
     int syn = 0;
 
@@ -121,7 +127,7 @@ int rcsConnect(int index, const struct sockaddr_in *addr)
     //Send a syn to start the connection
 
     std::cout << "Syn'd from client " << syn << std::endl;
-     
+
     int synack = 0;
     while(synack <= 0 || strcmp((char *)buf, "synack") != 0) {
         std::cout << "Trying to synack from client " << std::endl;
@@ -242,7 +248,7 @@ int rcsSend(int index, void *buf, int len)
         numSent = ucpSendTo(manager.sockets.at(index).sockfd, sending.str().c_str(), strlen(sending.str().c_str()), manager.sockets.at(index).addr);
         while (numSent <= 0) {
             numSent = ucpSendTo(manager.sockets.at(index).sockfd, sending.str().c_str(), strlen(sending.str().c_str()), manager.sockets.at(index).addr);
-        }  
+        }
 
         numRec = rcsRecv(index, recv, 64);
         recv[numRec] = 0;
