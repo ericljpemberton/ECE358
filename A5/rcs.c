@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <iostream>
+#include <stdio.h>
 
 //used to allocate an RCS socket
 //Returns a socket descriptor (positive integer) on success
@@ -123,15 +124,13 @@ int rcsConnect(int index, const struct sockaddr_in *addr)
 //Data is sent and received reliably, so any byte that is returned by this call should be what was sent, and in the correct order
 int rcsRecv(int index, void *buf, int len)
 {
-    char* buffer;
-
     while(true) {
         int numRec = ucpRecvFrom(manager.sockets.at(index).sockfd, buf, len, manager.sockets.at(index).addr);
         if (numRec <= 0) {
             continue;
         }
 
-        ((char *)buf)[numRec] = 0;
+        memset(buf + (sizeof(char) * numRec), 0, len-numRec); //Null terminate the data
 
         //split buf into sequenceNumber, checksum, message
         //Check if sequence number is what we expect:
@@ -152,13 +151,13 @@ int rcsRecv(int index, void *buf, int len)
         }
 
         int check = atoi(checkSum);
-        //Check if it matches once we receive the data
+        //Ensure checksum matches once we receive the data
 
         char *message = strtok(0, "");
         if (message == 0 || check != checksum(message)) {
             continue;
         }
-
+ 
         std::cout << "Got: " << message << std::endl;
 
         //Message is valid, and in order
@@ -233,7 +232,7 @@ int rcsSend(int index, void *buf, int len)
 //Returns 0 on success.
 int rcsClose(int index)
 {
-    int status = ucpClose(manager.sockets.at(index).sockfd)
+    int status = ucpClose(manager.sockets.at(index).sockfd);
     manager.sockets.erase(manager.sockets.begin() + index);
     return status;
 }
