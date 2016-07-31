@@ -222,9 +222,12 @@ int rcsSend(int index, void *buf, int len)
             continue;
         }
 
+        memset((char *)buf, 0, len);
+
         return numSent;
     }
 
+    memset((char *)buf, 0, len);
     return numSent;
 }
 
